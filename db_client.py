@@ -4,28 +4,28 @@ import json
 class DB_Client:
 
     def __init__(self,server,database,username,password):
-        self.server = server
-        self.database = database
-        self.username = username
-        self.password = password
+        self.__server = server
+        self.__database = database
+        self.__username = username
+        self.__password = password
     
     def connect(self):
-        conn_string = 'DRIVER={SQL Server};SERVER='+self.server+';DATABASE='+self.database+';Trusted_Connection=yes'
-        self.conn = pyodbc.connect(conn_string)
-        self.cursor = self.conn.cursor()
+        conn_string = 'DRIVER={SQL Server};SERVER='+self.__server+';DATABASE='+self.__database+';Trusted_Connection=yes'
+        self.__conn = pyodbc.connect(conn_string)
+        self.__cursor = self.__conn.cursor()
         print("Connected to SQL Server database successfully!")
 
     def update(self,query):
-        self.cursor.execute(query)
+        self.__cursor.execute(query)
 
     def read(self,query):
-        self.cursor.execute(query)
-        rows = self.cursor.fetchall()
+        self.__cursor.execute(query)
+        rows = self.__cursor.fetchall()
   
         data = []
         for row in rows:
             row_dict = {}
-            for i, col in enumerate(self.cursor.description):
+            for i, col in enumerate(self.__cursor.description):
                 column_name = col[0]
                 row_dict[column_name] = row[i]
             data.append(row_dict)
@@ -34,7 +34,7 @@ class DB_Client:
         return json_data
 
     def close(self):
-        if self.conn:
-            self.conn.close()
+        if self.__conn:
+            self.__conn.close()
             print("Connection closed.")
 
